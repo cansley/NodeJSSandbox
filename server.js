@@ -19,6 +19,7 @@ var http = require("http");
 var fs = require("fs");
 var path = require("path");
 var mime = require("mime");
+var restHandler = require("./restHandler");
 var cache = {};
 var server = http.Server(app);
 
@@ -81,6 +82,11 @@ app.post("/products/add", function (req, res) {
         res.send();
     });
 });
+
+app.get("/todo", restHandler.get);
+app.post("/todo", restHandler.post);
+app.put("/todo", restHandler.put);
+app.delete("/todo", restHandler.delete);
 
 app.get("/*", serveFile);
 app.get("/", serveFile);
