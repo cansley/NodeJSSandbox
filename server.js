@@ -2,10 +2,10 @@
  * Created by cxa70 on 10/9/2014.
  */
 var express = require("express");
-var app  = express();
+var app = express();
 
 var cors = require("cors");
-var bodyParser=require("body-parser");
+var bodyParser = require("body-parser");
 
 app.use(cors());
 app.use(bodyParser.urlencoded({extended: true}));
@@ -23,44 +23,50 @@ var restHandler = require("./restHandler");
 var cache = {};
 var server = http.Server(app);
 
-function send404(res){
+function send404(res) {
     res.writeHead(404, {'Content-Type': 'text/plain'});
     res.write('Error 404: resource not found.');
     res.end();
 }
 
-function sendFile(res, fpath, contents){
+function sendFile(res, fpath, contents) {
     res.writeHead(200, {"content-type": mime.lookup(path.basename(fpath))});
     res.end(contents);
 }
 
 
-function serverStatic(res, cache, absPath){
-        if(cache[absPath]){
+function serverStatic(res, cache, absPath) {
+    if (cache[absPath]) {
         sendFile(res, absPath, cache[absPath]);
-    }else{
-        fs.exists(absPath, function (exists) {
-           if(exists){
-               fs.readFile(absPath, function(err, data){
-                   if(err){
-                       send404(res);
-                   }else{
-                       cache[absPath] = data;
-                       sendFile(res, absPath, data);
-                   }
-               });
-           }else{
-               send404(res);
-           }
-        });
+    } else {
+        var root = __dirname;
+        var resPath = path.resolve(absPath);
+        if (resPath.substr(0, root.length) !== root){
+            send404(res);
+        } else {
+            fs.exists(absPath, function (exists) {
+                if (exists) {
+                    fs.readFile(absPath, function (err, data) {
+                        if (err) {
+                            send404(res);
+                        } else {
+                            cache[absPath] = data;
+                            sendFile(res, absPath, data);
+                        }
+                    });
+                } else {
+                    send404(res);
+                }
+            });
+        }
     }
 }
 
-function serveFile(req, res){
+function serveFile(req, res) {
     var filePath = false;
-    if (req.url == "/"){
+    if (req.url == "/") {
         filePath = 'public/index.html';
-    }else{
+    } else {
         filePath = 'public' + req.url;
     }
 
@@ -69,16 +75,16 @@ function serveFile(req, res){
 }
 
 /* routes */
-app.get("/products", function(req, res){
-   Product.find(function(err, products){
-       res.send(products);
-   });
+app.get("/products", function (req, res) {
+    Product.find(function (err, products) {
+        res.send(products);
+    });
 });
 
 app.post("/products/add", function (req, res) {
     var name = req.body.name;
     var product = new Product({name: name});
-    product.save(function(err){
+    product.save(function (err) {
         res.send();
     });
 });

@@ -1,1 +1,7 @@
 This is just a sandbox to enable me to play around and learn NodeJS.
+
+To use the RESTful part using powershell:
+GET:    Invoke-RestMethod http://localhost:3000/todo
+POST:   Invoke-RestMethod http://localhost:3000/todo -Method POST -Body '{"newItem":"Something to do."}' -ContentType "application/json"
+PUT:    Invoke-RestMethod http://localhost:3000/todo -Method PUT -Body '{"idx":0,"content":"Something else to do"}' -ContentType "application/json"
+DELETE: Invoke-RestMethod http://localhost:3000/todo/0?api-key=foobar -Method DELETE -ContentType "application/json"
