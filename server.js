@@ -86,7 +86,7 @@ app.post("/products/add", function (req, res) {
 app.get("/todo", restHandler.get);
 app.post("/todo", restHandler.post);
 app.put("/todo", restHandler.put);
-app.delete("/todo", restHandler.delete);
+app.delete("/todo/*", restHandler.delete);
 
 app.get("/*", serveFile);
 app.get("/", serveFile);

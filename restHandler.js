@@ -43,7 +43,7 @@ function get(request, response){
 
 function del(request, response){
     var pathName = url.parse(request.url).pathname;
-    var idx = parseInt(pathName.slice(1), 10);
+    var idx = parseInt(pathName.slice(pathName.lastIndexOf('/')+1), 10);
 
     if(isNaN(idx)){
         response.statusCode = 400;
@@ -60,32 +60,53 @@ function del(request, response){
 function put(request, response){
     var text = '';
     request.setEncoding('utf8');
-    request.on('data', function(chunk){
-        console.log('chunking...');
-        text += chunk;
-    });
 
-    request.on('end', function () {
-        var item;
-        try {
-            item = JSON.parse(text);
-            if(isNaN(item.idx)){
+    if (request.body){
+        if(typeof request.body.idx !== undefined){
+            if (isNaN(request.body.idx)) {
                 response.statusCode = 400;
                 response.end("Invalid item submitted.");
                 return;
             }
 
-            if(!items[item.idx]){
+            if (!items[request.body.idx]) {
                 response.statusCode = 400;
                 response.end("Item not found.");
             }
-            items[item.idx] = item.content;
+            items[request.body.idx] = request.body.content;
             response.end('OK\n');
-        } catch(err) {
+        } else {
             response.statusCode = 400;
             response.end("Invalid item submitted.");
         }
-    });
+    } else {
+        request.on('data', function (chunk) {
+            console.log('chunking...');
+            text += chunk;
+        });
+
+        request.on('end', function () {
+            var item;
+            try {
+                item = JSON.parse(text);
+                if (isNaN(item.idx)) {
+                    response.statusCode = 400;
+                    response.end("Invalid item submitted.");
+                    return;
+                }
+
+                if (!items[item.idx]) {
+                    response.statusCode = 400;
+                    response.end("Item not found.");
+                }
+                items[item.idx] = item.content;
+                response.end('OK\n');
+            } catch (err) {
+                response.statusCode = 400;
+                response.end("Invalid item submitted.");
+            }
+        });
+    }
 }
 
 exports.post = post;
