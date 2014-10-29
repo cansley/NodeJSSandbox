@@ -33,11 +33,11 @@ function post(request, response){
 
 function get(request, response){
     var body = items.map(function (item, i) {
-        return i + ') ' + item;
-    }).join('\n');
-
+        return '{"idx":' + i + ',"Value":"' + item + '"}';
+    }).join(',');
+    body = '{"items":[' + body + "]}";
     response.setHeader('Content-Length', Buffer.byteLength(body));
-    response.setHeader('Content-Type', 'text/plain; charset=utf-8');
+    response.setHeader('Content-Type', 'application/json; charset=utf-8');
     response.end(body);
 }
 
