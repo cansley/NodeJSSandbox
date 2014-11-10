@@ -15,7 +15,10 @@ var router = require("./routes");
 app.use(router);
 
 var http = require("http");
+var https = require('https');
+var ssl_key = require('./lib/sslKeyReader');
 var server = http.Server(app);
+var ssl_server = https.createServer(ssl_key.options, app);
 
 var chatServer = require("./lib/chat_server");
 chatServer.listen(server);
@@ -23,3 +26,4 @@ chatServer.listen(server);
 server.listen(3000, function () {
     console.log("Server listening on port 3000.");
 });
+ssl_server.listen(3001, function(){console.log("SSL Server listening on port 3001");});
