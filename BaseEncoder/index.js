@@ -27,11 +27,7 @@ Number.prototype.Encode = function (base){
             return BaseChars[base][x];
         }
     } else {
-        try {
-            return this.toString(base);
-        } catch(err){
-            console.log("base = " + base);
-        }
+        return this.toString(base);
     }
 };
 
@@ -41,7 +37,7 @@ String.prototype.Decode = function (base){
         for (var i = 0; i < this.length; i++) {
             var char = this.substr(this.length - (i + 1), 1);
             var idx = BaseChars[base].indexOf(char);
-            dec = dec + (Math.pow(base, i) * idx);
+            dec = dec + (Math.pow(~~(base), i) * idx);
         }
         return dec;
     } else {
