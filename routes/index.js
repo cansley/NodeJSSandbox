@@ -11,6 +11,9 @@ router.post("/todo", todoHandler.post);
 router.put("/todo", todoHandler.put);
 router.delete("/todo/*", todoHandler.delete);
 
+var fileUploader = require("../lib/fileUpload");
+router.post("/upload", fileUploader.post);
+
 var statServer = require("../lib/staticFileServer");
 router.get("/*", statServer.serveFile);
 router.get("/", statServer.serveFile);

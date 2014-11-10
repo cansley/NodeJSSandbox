@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<form action="upload" enctype="multipart/form-data" id="uploadForm" name="uploadForm">
+    <input id="fileUpload" type="file" name="files[]" data-url="upload" multiple/>
+</form>
+<div id="files"></div>
+</body>
+<script src="bower_components/jquery/dist/jquery.min.js"></script>
+<script src="bower_components/blueimp-file-upload/js/vendor/jquery.ui.widget.js"></script>
+<script src="bower_components/blueimp-file-upload/js/jquery.iframe-transport.js"></script>
+<script src="bower_components/blueimp-file-upload/js/jquery.fileupload.js"></script>
+<script src="javascripts/ajaxActions.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('uploadForm').submit(function (event) {
+            event.preventDefault();
+        });
+        var uploadButton = $('<button/>').addClass("btn")
+                .prop('disabled', true)
+                .text('Processing...')
+                .click(function (event) {
+                    var $this = $(this),
+                            data = $this.data();
+                    $this.off('click')
+                            .text('Abort')
+                            .on('click', function () {
+                                $this.remove();
+                                data.abort()
+                            });
+                    data.submit().always(function () {
+                        $this.remove();
+                    });
+                });
+
+        $('#fileUpload').fileupload({
+            dataType: 'json',
+            autoUpload: false,
+            add: function (e, data) {
+                data.context = $('<div/>').appendTo("#files");
+                $.each(data.files, function (index, file) {
+                    var node = $('<p/>').append($('<span/>').text(file.name));
+                    if (!index) {
+                        node.append('<br>')
+                                .append(uploadButton.clone(true).data(data));
+                    }
+                    node.appendTo(data.context);
+                });
+            },
+            processalways: function (e, data) {
+                var index = data.index,
+                        file = data.files[index],
+                        node = $(data.context.children()[index]);
+                if (file.preview){
+                    node.prepend('<br>')
+                            .prepend(file.preview);
+                }
+                if(file.error){
+                    node.prepend('<br>').prepend(file.error);
+                }
+                if(index +1 === data.files.length){
+                    data.context.find('button').text('Upload')
+                            .prop('disabled', !!data.files.error);
+                }
+            },
+            progressall: function (e, data) {
+                var progress = parseInt(data.loaded / data.total * 100, 10);
+                $('#progress .bar').css('width', progress + '%');
+            },
+            done: function (e, data) {
+                var status = "";
+                $.each(data.result.files, function (index, file) {
+                    status += file.name + "\n";
+                });
+                alert("Uploaded files: " + status);
+            }
+        });
+    });
+</script>
+</html>
