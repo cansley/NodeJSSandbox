@@ -13,6 +13,7 @@ router.delete("/todo/*", todoHandler.delete);
 
 var fileUploader = require("../lib/fileUpload");
 router.post("/upload", fileUploader.post);
+router.get("/upload", fileUploader.get);
 
 var statServer = require("../lib/staticFileServer");
 router.get("/*", statServer.serveFile);
