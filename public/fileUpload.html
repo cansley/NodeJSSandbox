@@ -37,7 +37,7 @@
     </div>
 </div>
 <div class="container">
-    <form action="upload" enctype="multipart/form-data" id="fileupload" name="fileupload" data-ng-app="fuploader" data-ng-controller="FileUploadController" data-file-upload="options" data-ng-class="{'fileupload-processing': processing() || loadingFiles}">
+    <form action="upload" method="post" enctype="multipart/form-data" id="fileupload" name="fileupload" data-ng-app="fuploader" data-ng-controller="MyFileUploadController" data-file-upload="options" data-ng-class="{'fileupload-processing': processing() || loadingFiles}">
         <!--<input id="fileUpload" type="file" name="files[]" data-url="upload" multiple/>-->
 
         <div class="row fileupload-buttonbar">
