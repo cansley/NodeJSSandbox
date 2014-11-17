@@ -3,15 +3,50 @@
 <head lang="en">
     <meta charset="UTF-8">
     <title>Simple Todo List</title>
+    <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="stylesheets/style.css" rel="stylesheet"/>
 </head>
-<body>
-<div id='itemList'></div>
-<form id="addForm" action="http://localhost:3000/todo">
-    <input type="text" id="newItem" name="newItem">
-    <button id="addBtn">Add Item</button>
-</form>
+<body ng-app="jetbrains" ng-controller="TodoCtrl as app">
+<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Something-Something ToDos</a>
+        </div>
+        <div class="navbar-collapse collapse">
+            <form class="navbar-form navbar-right" role="form">
+                <div class="form-group">
+                    <input type="text" placeholder="Email" class="form-control">
+                </div>
+                <div class="form-group">
+                    <input type="password" placeholder="Password" class="form-control">
+                </div>
+                <button type="submit" class="btn btn-success">Sign in</button>
+            </form>
+        </div>
+        <!--/.navbar-collapse -->
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <ul class="list-group">
+            <li class="list-group-item" ng-repeat="todo in app.todos">
+                <span class="glyphicon glyphicon-remove right-padded make-mouse-hand" ng-click="app.removeTodo(todo)"></span><span ng-bind="todo.Value"></span></li>
+        </ul>
+    </div>
+    <div class="row form-inline">
+            <form name="form"><input class="form-control" type="text" ng-model="app.newTodo"/>
+        <button class="btn btn-primary" ng-click="app.saveTodo(app.newTodo)">Save Todo</button></form>
+    </div>
+</div>
 </body>
+<script src="bower_components/angular/angular.js"></script>
+<script src="javascripts/app.js"></script>
 <script src="bower_components/jquery/dist/jquery.min.js"></script>
-<script src="javascripts/ajaxActions.js"></script>
-<script src="javascripts/todo.js"></script>
+<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 </html>
