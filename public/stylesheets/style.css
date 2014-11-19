@@ -1,7 +1,6 @@
 body {
-  padding-top: 50px;
+  padding-top: 60px;
   padding-bottom: 20px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
 a {
@@ -20,12 +19,15 @@ a {
 }
 
 #messages{
-    width: 690px;
     height: 300px;
     overflow: auto;
     background-color: #eeeeee;
     margin-bottom: 1em;
     margin-right: 10px;
+}
+
+.chat-message{
+    width: 690px !important;
 }
 
 #room-list{
@@ -43,14 +45,9 @@ a {
     background-color: #dddddd;
 }
 
-#send-message{
-    width: 700px;
-    margin-bottom: 1em;
-    margin-right: 1em;
-}
-
 #help{
-    font: 10px "Lucida Grande", Helveica, Arial, sans-serif;
+    /*font: 10px "Lucida Grande", Helveica, Arial, sans-serif;*/
+    font-size: 10px;
 }
 
 .left-padded{

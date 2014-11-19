@@ -16,7 +16,7 @@
                 '/results.html?%s'
             );
         }]);
-
+    // Be careful here, FileUploadController is actually in use by default in jquery.fileupload-angular.js
     fuploader.controller("MyFileUploadController", ['$scope', '$http', '$filter', '$window',
         function ($scope, $http) {
             $scope.options = {

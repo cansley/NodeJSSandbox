@@ -58,4 +58,8 @@
 
         loadTodos();
     });
+
+    jetbrains.controller('chatCtrl', function($scope, socket){
+        var app = this;
+    });
 })();
