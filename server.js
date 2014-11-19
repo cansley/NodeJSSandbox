@@ -20,8 +20,11 @@ var ssl_key = require('./lib/sslKeyReader');
 var server = http.Server(app);
 var ssl_server = https.createServer(ssl_key.options, app);
 
-var chatServer = require("./lib/chat_server");
-chatServer.listen(server);
+//var chatServer = require("./lib/chat_server");
+//chatServer.listen(server);
+
+var io = require('socket.io').listen(server);
+io.sockets.on('connection', require('./routes/socket'));
 
 server.listen(3000, function () {
     console.log("Server listening on port 3000.");
