@@ -87,6 +87,7 @@
     //for reference => http://www.html5rocks.com/en/tutorials/frameworks/angular-websockets/
     jetbrains.controller('chatCtrl', function($scope, socket){
         var app = this;
+        $scope.messages = [];
 
         // Socket listeners
         // ================

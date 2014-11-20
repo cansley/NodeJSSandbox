@@ -4,34 +4,38 @@
     <meta charset="UTF-8">
     <title>Chat</title>
     <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet"/>
-    <link href="stylesheets/style.css" rel="stylesheet" />
+    <link href="stylesheets/style.css" rel="stylesheet"/>
 </head>
 <body>
 <div id="topNav"></div>
-<div id="content"  class="container">
-    <div class="row" id="room"></div>
-    <div class="row" id="room-list"></div>
-    <div class="row chat-message" id="messages"></div>
-    <div class="row form-inline">
-    <form id="send-form">
-        <input  class="form-control chat-message" type="text" id="send-message" />
-        <button  id="send-button" class="btn btn-primary">Send</button>
+<div id="content" class="container">
+    <div ng-app="jetbrains" ng-controller="chatCtrl as app">
+        <div class="col"><h3>Messages</h3>
 
+            <div class="overflowable"><p ng-repeat="message in messages">{{ message.user }}: {{ message.text }}</p></div>
+            <div class="col"></div>
+            <h3>Users</h3>
 
-        <div id="help">
-            Chat commands:
-            <ul>
-                <li>Change nickname: <code>/nick [username]</code></li>
-                <li>Join/create room: <code>/join [room name]</code></li>
-            </ul>
+            <div class="overflowable"><p ng-repeat="user in users">{{ user }}</p></div>
+            <div class="clr"></div>
+            <form ng-submit="sendMessage()">Message:<input size="60" ng-model="message"><input type="submit"
+                                                                                               value="Send">
+            </form>
+            <div class="clr"></div>
+            <h3>Change your name</h3>
+
+            <p>Your current user name is {{ name }}</p>
+
+            <form ng-submit="changeName()"><input ng-model="newName"><input type="submit" value="Change Name"></form>
         </div>
-    </form>
     </div>
 </div>
 <script src="/socket.io/socket.io.js" type="text/javascript"></script>
-<script src="bower_components/jquery/dist/jquery.min.js" type="text/javascript"></script>
-<script src="javascripts/chat.js" type="text/javascript"></script>
-<script src="javascripts/chat_ui.js" type="text/javascript"></script>
+<script src="bower_components/angular/angular.min.js"></script>
+<script src="bower_components/angular-route/angular-route.min.js"></script>
+<script src="bower_components/angular-socket-io/socket.min.js"></script>
+<script src="javascripts/app.js"></script>
+<script src="bower_components/jquery/dist/jquery.min.js"></script>
 <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 <script src="javascripts/loadTopNav.js"></script>
 </body>

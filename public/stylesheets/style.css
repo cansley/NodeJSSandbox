@@ -61,3 +61,23 @@ a {
 .make-mouse-hand{
     cursor: pointer;
 }
+
+.overflowable {
+    height: 240px;
+    overflow-y: auto;
+    border: 1px solid #000;
+}
+
+.overflowable p {
+    margin: 0;
+}
+
+/* poor man's grid system */
+.col {
+    float: left;
+    width: 350px;
+}
+
+.clr {
+    clear: both;
+}
