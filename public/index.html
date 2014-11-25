@@ -9,16 +9,21 @@
 <body>
 <div id="topNav"></div>
 <div id="content" class="container">
-    <div ng-app="jetbrains" ng-controller="chatCtrl as app">
-        <div class="col"><h3>Messages</h3>
+    <div ng-app="jetbrains" ng-controller="altChatCtrl as app">
+        <div class="col"><h3>Messages <span ng-bind="ranVal"></span> </h3>
 
-            <div class="overflowable"><p ng-repeat="message in messages">{{ message.user }}: {{ message.text }}</p></div>
+            <div class="overflowable"><p ng-repeat="message in messages track by $index">{{ message }}</p></div>
             <div class="col"></div>
             <h3>Users</h3>
 
             <div class="overflowable"><p ng-repeat="user in users">{{ user }}</p></div>
             <div class="clr"></div>
-            <form ng-submit="sendMessage()">Message:<input size="60" ng-model="message"><input type="submit"
+            <h3>Rooms</h3>
+
+            <div class="overflowable"><p ng-repeat="room in rooms"><a class="make-mouse-hand" ng-click="changeRoom(room)">{{ room }}</a></p></div>
+            <div><form ng-submit="changeRoom()"><input ng-model="newRoom"><input type="submit" value="Create Room"></form> </div>
+            <div class="clr"></div>
+            <form ng-submit="processUserInput()">Message:<input size="60" ng-model="message"><input type="submit"
                                                                                                value="Send">
             </form>
             <div class="clr"></div>
@@ -34,6 +39,7 @@
 <script src="bower_components/angular/angular.min.js"></script>
 <script src="bower_components/angular-route/angular-route.min.js"></script>
 <script src="bower_components/angular-socket-io/socket.min.js"></script>
+<script src="javascripts/chat.js"></script>
 <script src="javascripts/app.js"></script>
 <script src="bower_components/jquery/dist/jquery.min.js"></script>
 <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>

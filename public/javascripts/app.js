@@ -174,11 +174,131 @@
             // add the message to our model locally
             $scope.messages.push({
                 user: $scope.name,
-                text: $scope.message
+                text: $scope.name + ": " + $scope.message
             });
 
             // clear message box
             $scope.message = '';
         };
     });
+
+    jetbrains.controller('altChatCtrl', function($scope, socket){
+        var app = this;
+        $scope.messages = [];
+        $scope.rooms = [];
+        $scope.users = [];
+        $scope.ranVal = "";
+
+        socket.on('updateUsers', function(result){
+            $scope.updateUsers(result.users);
+        });
+        socket.on('nameResult', function(result){
+            var message;
+            if(result.success){
+                message = 'You are now known as ' + result.name + '.';
+                $scope.name = result.name;
+                if(result.users){
+                    $scope.updateUsers(result.users);
+                }
+            }else{
+                message = result.message;
+            }
+            $scope.messages.push(message);
+        });
+
+        socket.on('joinResult', function(result){
+            $scope.room = result.room;
+            $scope.messages.push('Room changed.');
+            if(result.users){
+                $scope.updateUsers(result.users);
+            }
+        });
+
+        socket.on('message', function(message){
+            $scope.messages.push(message.text);
+            if(message.users){
+                $scope.updateUsers(message.users);
+            }
+        });
+
+        socket.on('rooms', function(rooms){
+            $scope.rooms = [];
+            for (var room in rooms){
+                room = room.substring(1, room.length);
+                if(room != ''){
+                    $scope.rooms.push(room);
+                }
+            }
+        });
+
+        socket.on('random', function(value){
+            $scope.ranVal = value.value;
+            socket.emit('inbound', { name: $scope.name });
+        });
+
+        var chatApp = new Chat(socket);
+
+
+        setInterval(function(){
+            socket.emit('rooms');
+        }, 1000);
+
+        socket.emit('inbound', { name: $scope.name });
+
+        $scope.processUserInput = function(){
+            var message = $scope.message;
+            var room = $scope.room;
+            var user = $scope.name;
+            var systemMessage;
+
+            if (message.charAt(0)=='/'){
+                systemMessage = chatApp.processCommand(message);
+                if(systemMessage){
+                    $scope.messages.push(systemMessage);
+                }
+            } else {
+                chatApp.sendMessage(room, message);
+                $scope.messages.push($scope.name + ": " + message);
+            }
+
+            $scope.message = '';
+        };
+
+        $scope.changeName = function(){
+            var command = '/nick ' + $scope.newName;
+            var systemMessage = chatApp.processCommand(command);
+            if(systemMessage){
+                $scope.messages.push(systemMessage);
+            }
+
+            $scope.newName = '';
+        };
+
+        $scope.changeRoom = function(newRoom){
+            var room = newRoom;
+            if(!newRoom){
+                room = $scope.newRoom;
+            }
+
+            var command = '/join ' + room;
+            var systemMessage = chatApp.processCommand(command);
+            if(systemMessage){
+                $scope.messages.push(systemMessage);
+            } else {
+                $scope.newRoom = '';
+            }
+        };
+
+        $scope.updateUsers = function(users){
+            for(var i=0;i<users.length;i++){
+                if(users[i]===$scope.name){
+                    users.splice(i, 1);
+                    break;
+                }
+            }
+            $scope.users = users;
+        };
+
+    });
+
 })();
