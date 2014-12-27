@@ -26,6 +26,9 @@ chatServer.listen(server);
 //var io = require('socket.io').listen(server);
 //io.sockets.on('connection', require('./routes/socket'));
 
+var timeTracker = require('./lib/timetracker_mssql.js');
+timeTracker.GetWorkItems();
+
 server.listen(3000, function () {
     console.log("Server listening on port 3000.");
 });
