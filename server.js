@@ -1,35 +1,50 @@
-/**
- * Created by cxa70 on 10/9/2014.
- */
-var express = require("express");
-var app = express();
+(function() {
+  var app, bodyParser, chatServer, cors, express, http, https, router, server, ssl_key, ssl_server, timeTracker;
 
-var cors = require("cors");
-var bodyParser = require("body-parser");
+  express = require('express');
 
-app.use(cors());
-app.use(bodyParser.urlencoded({extended: true}));
-app.use(bodyParser.json());
+  app = express();
 
-var router = require("./routes");
-app.use(router);
+  cors = require('cors');
 
-var http = require("http");
-var https = require('https');
-var ssl_key = require('./lib/sslKeyReader');
-var server = http.Server(app);
-var ssl_server = https.createServer(ssl_key.options, app);
+  bodyParser = require('body-parser');
 
-var chatServer = require("./lib/chat_server");
-chatServer.listen(server);
+  app.use(cors());
 
-//var io = require('socket.io').listen(server);
-//io.sockets.on('connection', require('./routes/socket'));
+  app.use(bodyParser.urlencoded({
+    extended: true
+  }));
 
-var timeTracker = require('./lib/timetracker_mssql.js');
-timeTracker.GetWorkItems();
+  app.use(bodyParser.json());
 
-server.listen(3000, function () {
-    console.log("Server listening on port 3000.");
-});
-ssl_server.listen(3001, function(){console.log("SSL Server listening on port 3001");});
+  router = require('./routes');
+
+  app.use(router);
+
+  http = require('http');
+
+  https = require('https');
+
+  ssl_key = require('./lib/sslKeyReader');
+
+  server = http.Server(app);
+
+  ssl_server = https.createServer(ssl_key.options, app);
+
+  chatServer = require('./lib/chat_server');
+
+  chatServer.listen(server);
+
+  timeTracker = require('./lib/timetracker_mssql.js');
+
+  timeTracker.GetWorkItems();
+
+  server.listen(3000);
+
+  console.log('Server listening on port 3000');
+
+  ssl_server.listen(3001);
+
+  console.log('SSL Server listening on port 3001');
+
+}).call(this);
